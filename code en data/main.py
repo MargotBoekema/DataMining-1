@@ -1,5 +1,6 @@
 # Data Mining Techniques
 # Koen Smallegange 
+# Margot Boekema 2717237
 # april 2023
 # 
 # This script controls all code
@@ -10,6 +11,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from clean import clean_frame
+import matplotlib.pyplot as plt
+import pandas as pd
+from wordcloud import WordCloud
+from collections import Counter
 
 # define path to data
 path = 'data.csv'
@@ -37,5 +42,33 @@ dfc = pd.read_csv('clean.csv')
 #     inplace=True,
 # )
 
+#Wordcloud
 
+#Combine colums about good days
+good_day = dfc[['What makes a good day for you (1)?', 'What makes a good day for you (2)']]
+dfc['What makes a good day for you (1)?'] = dfc['What makes a good day for you (1)?'].astype(str)
+dfc['What makes a good day for you (2)?'] = dfc['What makes a good day for you (2)?'].astype(str)
+
+# Concatenate the two columns into a single string
+text = ' '.join(dfc['What makes a good day for you (1)?'].tolist() + dfc['What makes a good day for you (2)?'].tolist()).lower()
+
+remove_list = ["good", "nice"]
+text = remove_words(text, remove_list)
+
+# Create a WordCloud
+wordcloud = WordCloud(width = 800, height = 800,
+                background_color ='white',
+                min_font_size = 10).generate(text)
+
+plt.figure(figsize = (8, 8), facecolor = None)
+plt.imshow(wordcloud)
+plt.axis("off")
+plt.tight_layout(pad = 0)
+plt.show()
+
+#Most common words
+word_counts = Counter(text.split())
+most_common_words = word_counts.most_common(6)
+print(most_common_words)
+    
        
